@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Configuración de versión
-program.version('0.1.0').description('KUM CLI - Herramienta de despliegue para el mini-CMS');
+program.version('0.1.0').description('KUM CLI - Herramienta de despliegue para KUM');
 
 /**
  * COMANDO: kum create <name>
@@ -27,7 +27,7 @@ program
 
     // Clonamos el repositorio del motor (Template)
     // Cambia esta URL por la URL real de tu repositorio de template
-    if (shell.exec(`git clone https://github.com/sosaheri/kum.git "${name}"`).code !== 0) {
+    if (shell.exec(`git clone https://github.com/sosaheri/kum-cms.git "${name}"`).code !== 0) {
       console.error('❌ Error: No se pudo clonar el repositorio.');
       process.exit(1);
     }
