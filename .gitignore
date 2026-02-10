@@ -1,4 +1,14 @@
 node_modules/
+dist/
+build/
+npm-debug.log*
+.DS_Store
+/.vscode
+/.idea
+/.cache
+coverage/
+*.tgz
+node_modules/
 /.env
 .DS_Store
 npm-debug.log*
