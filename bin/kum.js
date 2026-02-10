@@ -7,23 +7,10 @@ const fs = require('fs');
 const readline = require('readline/promises');
 const { stdin: input, stdout: output } = require('process');
 const child = require('child_process');
+const { readJsonSafe, writeJsonAtomic } = require('../lib/utils');
 
 // CLI version and description
 program.version('0.1.0').description('KUMI CLI - Deployment tool for KUMI (alias kum kept for compatibility)');
-
-function readJsonSafe(filePath, defaultValue = {}) {
-  try {
-    if (!fs.existsSync(filePath)) return defaultValue;
-    const txt = fs.readFileSync(filePath, 'utf8');
-    if (!txt || !txt.trim()) return defaultValue;
-    return JSON.parse(txt);
-  } catch (e) {
-    console.warn(`Warning: failed to parse JSON at ${filePath}: ${e.message}`);
-    try { fs.copyFileSync(filePath, `${filePath}.corrupt.${Date.now()}`); } catch (_) {}
-    fs.writeFileSync(filePath, JSON.stringify(defaultValue, null, 2), 'utf8');
-    return defaultValue;
-  }
-}
 /**
  * COMMAND: create <name>
  * Clone the base template repository to start a new project.

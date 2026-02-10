@@ -1,13 +1,19 @@
 {
   "name": "kumi-cli",
   "version": "0.1.1",
-  "description": "CLI oficial para KUMI",
+  "description": "KUMI CLI",
   "main": "bin/kumi.js",
   "bin": {
     "kumi": "bin/kumi.js"
   },
+  "scripts": {
+    "test": "npx vitest"
+  },
   "dependencies": {
-    "commander": "^12.0.0", 
-  "shelljs": "^0.8.5"
+    "commander": "^12.0.0",
+    "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0"
   }
 }
