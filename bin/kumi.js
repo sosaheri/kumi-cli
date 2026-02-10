@@ -11,6 +11,22 @@ const child = require('child_process');
 // CLI version and description
 program.version('0.1.0').description('KUMI CLI - Deployment tool for KUMI');
 
+function readJsonSafe(filePath, defaultValue = {}) {
+  try {
+    if (!fs.existsSync(filePath)) return defaultValue;
+    const txt = fs.readFileSync(filePath, 'utf8');
+    if (!txt || !txt.trim()) return defaultValue;
+    return JSON.parse(txt);
+  } catch (e) {
+    console.warn(`Warning: failed to parse JSON at ${filePath}: ${e.message}`);
+    try {
+      fs.copyFileSync(filePath, `${filePath}.corrupt.${Date.now()}`);
+    } catch (_) {}
+    fs.writeFileSync(filePath, JSON.stringify(defaultValue, null, 2), 'utf8');
+    return defaultValue;
+  }
+}
+
 /**
  * COMMAND: create <name>
  * Clone the base template repository to start a new project.
@@ -84,7 +100,7 @@ program
       rl.close();
       return;
     }
-    const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+    const catalog = readJsonSafe(catalogPath, { components: [] });
     const components = catalog.components || [];
 
     console.log('\nKUMI Wizard — guided composition');
@@ -126,7 +142,7 @@ program
         const featuresHtml = features.map(f => `<div class="feature"><i class="icon-${f.icon}"></i><h3>${f.title}</h3><p>${f.desc}</p></div>`).join('\n');
         // save into sections.json structure
         const sectionsFile = path.join(cwd, 'data', 'sections.json');
-        const sections = fs.existsSync(sectionsFile) ? JSON.parse(fs.readFileSync(sectionsFile,'utf8')) : {};
+        const sections = readJsonSafe(sectionsFile, {});
         sections['features-grid'] = { section_title: sectionData.section_title, features_html: featuresHtml };
         fs.writeFileSync(sectionsFile, JSON.stringify(sections, null, 2), 'utf8');
       }
@@ -146,7 +162,7 @@ program
         const featuresHtml = features.map(f => `<li>${f}</li>`).join('\n');
         const payment_link = await rl.question('Payment link (url): ');
         const sectionsFile = path.join(cwd, 'data', 'sections.json');
-        const sections = fs.existsSync(sectionsFile) ? JSON.parse(fs.readFileSync(sectionsFile,'utf8')) : {};
+        const sections = readJsonSafe(sectionsFile, {});
         sections['pricing-base'] = { plan_name, price, currency, features_html: featuresHtml, payment_link };
         fs.writeFileSync(sectionsFile, JSON.stringify(sections, null, 2), 'utf8');
       }
@@ -165,7 +181,7 @@ program
         }
         const testimonialsHtml = testimonials.map(t => `<article class="testimonial"><blockquote>${t.quote}</blockquote><p class="author">${t.author} — ${t.role}</p></article>`).join('\n');
         const sectionsFile = path.join(cwd, 'data', 'sections.json');
-        const sections = fs.existsSync(sectionsFile) ? JSON.parse(fs.readFileSync(sectionsFile,'utf8')) : {};
+        const sections = readJsonSafe(sectionsFile, {});
         sections['testimonials-base'] = { testimonials_html: testimonialsHtml };
         fs.writeFileSync(sectionsFile, JSON.stringify(sections, null, 2), 'utf8');
       }
@@ -182,7 +198,7 @@ program
         }
         const faqHtml = faqs.map(item => `<div class="faq-item"><strong>${item.q}</strong><p>${item.a}</p></div>`).join('\n');
         const sectionsFile = path.join(cwd, 'data', 'sections.json');
-        const sections = fs.existsSync(sectionsFile) ? JSON.parse(fs.readFileSync(sectionsFile,'utf8')) : {};
+        const sections = readJsonSafe(sectionsFile, {});
         sections['faq-base'] = { faq_html: faqHtml };
         fs.writeFileSync(sectionsFile, JSON.stringify(sections, null, 2), 'utf8');
       }
@@ -193,7 +209,7 @@ program
         const email = await rl.question('Destination email: ');
         const phone = await rl.question('Phone/WhatsApp: ');
         const sectionsFile = path.join(cwd, 'data', 'sections.json');
-        const sections = fs.existsSync(sectionsFile) ? JSON.parse(fs.readFileSync(sectionsFile,'utf8')) : {};
+        const sections = readJsonSafe(sectionsFile, {});
         sections['contact-base'] = { title, email, phone };
         fs.writeFileSync(sectionsFile, JSON.stringify(sections, null, 2), 'utf8');
       }
@@ -207,7 +223,7 @@ program
         const cta_text = await rl.question('CTA text: ');
         const cta_link = await rl.question('CTA link: ');
         const sectionsFile = path.join(cwd, 'data', 'sections.json');
-        const sections = fs.existsSync(sectionsFile) ? JSON.parse(fs.readFileSync(sectionsFile,'utf8')) : {};
+        const sections = readJsonSafe(sectionsFile, {});
         sections['hero-standard'] = { hero: { title, subtitle, desc, bg_img, cta_text, cta_link } };
         fs.writeFileSync(sectionsFile, JSON.stringify(sections, null, 2), 'utf8');
       }
