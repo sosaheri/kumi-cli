@@ -6,15 +6,15 @@ const path = require('path');
 const fs = require('fs');
 
 // Configuración de versión
-program.version('0.1.0').description('KUMI CLI - Herramienta de despliegue para KUMI (alias kum disponible por compatibilidad)');
+program.version('0.1.0').description('KUMI CLI - Herramienta de despliegue para KUMI');
 
 /**
- * COMANDO: kum create <name>
+ * COMANDO: create <name>
  * Descarga el template base desde GitHub
  */
 program
   .command('create <name>')
-  .description('Crea un nuevo proyecto KUMI clonando el repositorio base')
+  .description('Crea un nuevo proyecto clonando el repositorio base')
   .action((name) => {
     const targetPath = path.join(process.cwd(), name);
 
@@ -43,7 +43,7 @@ program
   });
 
 /**
- * COMANDO: kum validate
+ * COMANDO: validate
  * Valida los archivos JSON de la carpeta /data usando los esquemas
  */
 program
@@ -59,7 +59,7 @@ program
   });
 
 /**
- * COMANDO: kum build
+ * COMANDO: build
  * Genera la versión estática monoficha (index-standalone.html)
  */
 program

@@ -1,10 +1,10 @@
 {
-  "name": "kum-cli",
+  "name": "kumi-cli",
   "version": "0.1.1",
-  "description": "CLI oficial para KUM",
-  "main": "bin/kum.js",
+  "description": "CLI oficial para KUMI",
+  "main": "bin/kumi.js",
   "bin": {
-    "kum": "bin/kum.js"
+    "kumi": "bin/kumi.js"
   },
   "dependencies": {
     "commander": "^12.0.0", 
