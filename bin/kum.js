@@ -251,4 +251,22 @@ program
     }
   });
 
+program
+  .command('clean-themes')
+  .description('Elimina builds generados en themes/* (index-standalone.html y assets/)')
+  .action(() => {
+    const cwd = process.cwd();
+    const themesDir = path.join(cwd, 'themes');
+    if (!fs.existsSync(themesDir)) {
+      console.log('No se encontró la carpeta themes/. Nada que limpiar.');
+      return;
+    }
+    const shell = require('shelljs');
+    const glob = path.join(themesDir, '*', 'index-standalone.html');
+    shell.rm('-f', glob);
+    const assetsGlob = path.join(themesDir, '*', 'assets');
+    shell.rm('-rf', assetsGlob);
+    console.log('Themes cleaned: removed generated index-standalone.html and assets/ folders.');
+  });
+
 program.parse(process.argv);
